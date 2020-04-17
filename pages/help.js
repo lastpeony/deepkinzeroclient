@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import dynamic from 'next/dynamic'
 import Navbar from '../components/NavbarComponent'
-import IndexText from '../components/IndexTextComponent'
-import 'rodal/lib/rodal.css';
-import '../styles/Submit.css'; // import css
-import '../styles/rsuite-table.css'; // or 'rsuite-table/dist/css/rsuite-table.css'
-
 import '../styles/Reset.css'; // import css
-import '../styles/Result.css'; // import css
-
 import '../styles/Navbar.css'; // import css
-import '../styles/IndexText.css'; // import css
 
 import {Link} from '../routes'
 import {Router} from '../routes'
 
 
-export default class Index extends Component{
+export default class Help extends Component{
 
 
   constructor(props) {
@@ -41,12 +33,12 @@ render(){
 
     return(
 
-<div>
-<Navbar/>
-      <IndexText/>
-</div>
-    
-  
+
+        <div>
+        <Navbar/>
+              <span>help page</span>
+        
+        </div>
     )
  
   

@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
+
+.navbar-container{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.logo-text{
+    text-align: center;
+    font-size: 50px;
+    font-family: "Lato";
+    font-weight: bold;
+    margin-left: 150px;
+    margin-top: 25px;
+    cursor: pointer;
+
+}
+
+
+.navbar-menu{
+display: flex;
+flex-direction: row;
+align-items: center;
+text-align: center;
+font-size: 30px;
+font-family: "Lato";
+margin-top: 25px;
+margin-right: 25px;
+
+}
+.about-item{
+
+    margin-right: 30px;
+    cursor: pointer;
+
+    
+}
+.about-item:hover{
+    color:lightblue;
+
+}
+
+.submit-item:hover{
+    color:lightblue;
+
+}
+.submit-item{
+    margin-right: 30px;
+    cursor: pointer;
+
+}
+
+.help-item{
+    margin-right: 30px;
+    cursor: pointer;
+
+
+}
+.help-item:hover{
+    color:lightblue;
+
+}

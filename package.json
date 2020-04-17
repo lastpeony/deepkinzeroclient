@@ -3,13 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "axios": "^0.19.1",
+    "cogo-toast": "^4.2.0",
+    "express": "^4.17.1",
     "next": "9.1.7",
+    "next-routes": "^1.4.2",
+    "rc-table": "^7.0.0-rc.3",
     "react": "16.12.0",
-    "react-dom": "16.12.0"
+    "react-dom": "16.12.0",
+    "react-faq-component": "^1.0.3",
+    "react-spinners": "^0.8.0",
+    "rodal": "^1.7.0",
+    "rsuite-table": "^3.8.4",
+    "socket.io-client": "^2.3.0"
   }
 }

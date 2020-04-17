@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css?family=Muli:300');
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
+hr{
+
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 150px;
+    border: 0;
+    border-top: 2px solid #eee;
+}
+.submit-container{
+    margin-left: 150px;
+    margin-top:40px;
+    
+}
+.submit-upper-container{
+    display: flex;
+}
+.submit-right-section-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    font-family: "Muli";
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.import-from-computer-button{
+    margin-top: 10px;
+    cursor: pointer;
+    width: 250px;
+    height: 50px;
+    background-color: #34495e;
+    color:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-property: opacity;
+
+    transition-duration: 0.2s;
+
+}
+.clear-button{
+    cursor: pointer;
+    width: 100px;
+    height: 65px;
+    background-color: lightgray;
+    color:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-property: opacity;
+    font-family: "Lato";
+    font-size: 25px;
+    font-weight: bold;
+    transition-duration: 0.2s;
+
+}
+.submit-button{
+    cursor: pointer;
+    width: 100px;
+    height: 65px;
+    background-color: #3498DB;
+    color:white;
+    display: flex;
+    margin-left: 10px;
+    justify-content: center;
+    align-items: center;
+    font-family: "Lato";
+    font-size: 25px;
+    font-weight: bold;
+    transition-property: opacity;
+
+    transition-duration: 0.2s;
+}
+.submit-button:hover{
+    opacity: 0.7;
+
+
+}
+.import-from-computer-input{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.warning-text{
+    font-family:"Lato";
+    font-size: 16px;
+    font-weight: bold;
+    
+}
+.working-timer{
+display: flex;
+margin-top: 10px;
+font-family:"Lato";
+font-size: 16px;
+font-weight: bold;
+
+
+}
+.clear-button:hover{
+    opacity: 0.7;
+}
+.import-from-computer-button:hover{
+    opacity: 0.7;
+
+}
+.deepkinzero-working-container{
+    display: flex;
+    flex-direction: column;
+    font-family:"Lato";
+    font-size: 15px;
+}
+.load-sample-text{
+cursor: pointer;
+transition-property: opacity;
+
+transition-duration: 0.2s;
+
+}
+.load-sample-text:hover{
+    opacity: 0.7;
+}
+.submit-textbox-container{
+
+
+}
+.submit-textbox-header{
+    font-family: "Muli";
+    font-size: 15px;
+    font-weight: bold;
+display: flex;
+width: 500px;
+justify-content: space-between;
+}
+
+.submit-textbox{
+
+    width: 500px;
+    height: 300px;
+    margin-top: 10px;
+    font-family: "Lato";
+    font-size: 20px;
+}
+
+textarea::placeholder {
+    font-family: "Lato";
+    color: #bdc3c7;
+    font-size: 20px;
+    padding: 8px 12px;
+}

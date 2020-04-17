@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
+
+.resultTableCell{
+
+    font-family: "Lato";
+    font-size:14px;
+
+}
+
+.resultTableHeader{
+    font-family: "Lato";
+    font-size:16px;
+
+
+}
