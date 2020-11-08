@@ -2,5 +2,5 @@
 
 deepkinzero website client.
 
-run npm install
+run npm install then
 node server.js
