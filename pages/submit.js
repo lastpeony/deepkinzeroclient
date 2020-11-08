@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import dynamic from 'next/dynamic'
 import Navbar from '../components/NavbarComponent'
-import SubmitComponent from '../components/SubmitComponent'
-
+//import SubmitComponent from '../components/SubmitComponent'
+const SubmitComponent = dynamic(() => import('../components/SubmitComponent'), {
+  ssr: false
+})
 import 'rodal/lib/rodal.css';
 import '../styles/rsuite-table.css'; // or 'rsuite-table/dist/css/rsuite-table.css'
 
@@ -30,16 +32,16 @@ export default class Submit extends Component{
   componentDidMount(){
 
 
-
   }
 
-
+ 
 
 render(){
 
     return(
 
 <div>
+
 <Navbar/>
 <SubmitComponent/>
 </div>

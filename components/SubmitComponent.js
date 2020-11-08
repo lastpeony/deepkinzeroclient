@@ -6,8 +6,15 @@ import Rodal from 'rodal';
 import BounceLoader from "react-spinners/BounceLoader";
 import ClipLoader from "react-spinners/ClipLoader";
 
+
 import axios from 'axios';
-import ResultComponent from './ResultComponent'
+
+import dynamic from 'next/dynamic'
+const ResultComponent = dynamic(() => import('./ResultComponent'), {
+  ssr: false
+})
+
+
 import io from 'socket.io-client';
 
 // include styles
@@ -20,50 +27,67 @@ export default class SubmitComponent extends Component{
     this.kinaseData;
     this.connectingToast;
     this.socket;
+    this.transportError;
     this.tableData;
     this.timerInterval;
+    this.resultId;
     this.totalSeconds = 0;
-    this.candidateKineases = `P29322
-Q9Y2K2
-Q16654
-P53671
-Q9UK32
-P42681
-Q9BWU1
-Q8WZ42
-Q15120
-Q8TDC3
-Q96S53
-P35916
-Q04912
-Q9UPZ9
-Q9Y6E0
-Q12851
-O94804
-Q9P286
-Q02763
-Q2M2I8
-Q9NZJ5
-P53667
-P31152
-P29323
-P07333
-Q5VT25
-P36507
-P54764
-P54753
-Q15569
-Q13523
-O43781
-Q16659
-Q9BQI3
-Q9Y2H1
-Q9H422
-Q9UIK4
-P22455
-P29320
-P23458
-    `
+    this.candidateKineases = 
+    `P07333	Y561	ESYEGNSYTFIDPTQ
+P08559	S300	SMSDPGVSYRTREEI
+P16220	S133	EILSRRPSYRKILND
+P17676	T266	VKSKAKKTVDKHSDE
+P22455	Y754	LLAVSEEYLDLRLTF
+P23528	S3	_____MASGVAVSDG
+P27361	Y204	HTGFLTEYVATRWYR
+P29353	Y427	ELFDDPSYVNVQNLD
+P29597	Y1055	VPEGHEYYRVREDGD
+P30305	S375	ARVLRSKSLCHDEIE
+P30307	S216	SGLYRSPSMPENLNR
+P35568	S794	QHLRLSTSSGRLLYA
+P42224	Y701	DGPKGTGYIKTELIS
+P49757	T102	LRVVDEKTKDLIVDQ
+P53350	T210	YDGERKKTLCGTPNY
+Q13094	Y145	PVEDDADYEPPPSND
+Q13158	S194	QNRSGAMSPMSWNSD
+Q92934	S75	EIRSRHSSYPAGTED
+P29320	Y779	EDDPEAAYTTRGGKI
+P54764	Y602	TYVDPFTYEDPNQAV
+P29322	Y839	LAYGERPYWNMTNRD
+P15260	Y457	KAPTSFGYDKPHVLV
+Q04912	Y1360	YVQLPATYMNLGPST
+P16410	Y201	SPLTTGVYVKMPPTE
+Q02763	Y1048	GMTCAELYEKLPQGY
+P54753	Y614	VYIDPFTYEDPNEAV
+P50549	S216	PMYQRQMSEPNIPFP
+Q16659	S189	YSHKGHLSEGLVTKW
+Q92731	S165	GYHYGVWSCEGCKAF
+Q15653	S19	DADEWCDSGLGSLGP
+Q9Y281	S3	_____MASGVTVNDE
+O00303	S46	PAAAPASSSDPAAAA
+O15273	S157	GALRRSLSRSMSQEA
+P05198	S49	IEGMILLSELSRRRI
+P10301	Y66	DPTIEDSYTKICSVD
+P19419	T417	ISVDGLSTPVVLSPG
+P26038	T558	LGRDKYKTLRQIRQG
+P31152	S196	LVTKWYRSPRLLLSP
+P42681	Y91	KIQVKALYDFLPREP
+P46695	T18	MTILQAPTPAPSTIP
+P53667	T508	PDRKKRYTVVGNPYW
+P53671	T505	NDRKKRYTVVGNPYW
+Q16821	S48	PSRRGSDSSEDIYLD
+Q9P286	S573	HRDIKSDSILLTSDG
+P52799	Y304	DSVFCPHYEKVSGDY
+Q9UIK4	S318	VRRRWKLSFSIVSLC
+Q9UPZ9	Y159	SKPPYTDYVSTRWYR
+Q9Y2H1	S282	NRRQLAYSTVGTPDY
+P02810	S24	QDLDEDVSQEDVPLV
+ENSP00000352232	Y439	DRLSQGAYGGLSDRP
+ENSP00000261937	Y1337	QVFYNSEYGELSEPS
+Q9BXS5	T144	QEGHKLETGAPRPPA
+Q96CW1	T156	SQITSQVTGQIGWRR`
+    
+    
     this.state = { 
         sample:"",
         importedFileName:"",
@@ -73,6 +97,7 @@ P23458
         tableDataReady:false
     };
   }  
+  
   componentDidMount(){
 
   this.connectingToast = cogoToast.loading(
@@ -82,39 +107,53 @@ P23458
 
    ,{hideAfter:0})
 
-    this.socket= io('http://localhost:4000',{
-        reconnection: false,
-        origins:"*"
-  
+    this.socket= io('http://127.0.0.1:4000',{
+        reconnection: true,
+        origins:"*",
 
     });
 
     
     this.socket.on('connected', (data)=>{
-        console.log(data)
-        this.connectingToast.hide()
-        cogoToast.success(
-            <span className="warning-text">Connected to DeepKinZero server.</span>
-
-        )
+        if(this.transportError != true){
+            console.log(data)
+            this.connectingToast.hide()
+            cogoToast.success(
+                <span className="warning-text">Connected to DeepKinZero server.</span>
+    
+            )
+        }
+      
 
     });
 
     this.socket.on('status', (status)=>{
         console.log("some event")
+        console.log(status)
         this.setState({status:status})
 
     });
 
+
     this.socket.on('disconnect', (reason)=>{
         console.log(`reason: ${reason}`);
+        if(reason !="transport error"){ // transport error is  not a real disconnection. due to blocking
+            this.transportError = true
+            console.log("disconnected from deepkinzero server.")
 
-        console.log("disconnected from deepkinzero server.")
-        this.setState({showWorkingModal:false})
-        cogoToast.error(
-            <span className="warning-text">You are disonnected  from DeepKinZero server.Refresh the page to reconnect.</span>
+            this.setState({showWorkingModal:false})
+            
+                cogoToast.error(
+                    <span className="warning-text">You are disonnected  from DeepKinZero server.Refresh the page to reconnect.</span>
+        
+                )
 
-        )
+        }
+        //if client disconnects with transport close, it will reconnect automaticly and retrieve his results.
+
+     
+        
+     
 
     });
 
@@ -127,18 +166,32 @@ P23458
         
 
     });
-
+    this.socket.on("wrong_data", ()=>{
+        
+        this.setState({showWorkingModal:false})
+                cogoToast.warn(
+                  <span className="warning-text">Your data input format is wrong.</span>
+      
+              )
+              
+      
+          });
     this.socket.on("result", (data)=>{
         console.log("result is called!")
-        console.log(data)
-        var data = data.resultData
-        this.tableData = this.sequenceToString(data)
+        this.tableData = data.resultData
         console.log(this.tableData)
+        clearInterval(this.resultChecker)
         this.setState({tableDataReady:true})
 
 
     });  
+  this.socket.on("resultId", (data)=>{
+        console.log("resultid is called!")
+        this.resultId = data.resultId
+        this.resultChecker = setInterval(()=> this.socket.emit('getResult',this.resultId), 10000);
 
+
+    });  
 
   }
 
@@ -152,10 +205,30 @@ P23458
       return valString;
     }
   }
-  loadSample = ()=>{
-    this.kinaseData = this.candidateKineases.split("\n")
-    this.kinaseData = this.kinaseData.filter(e => e.trim().length !== 0);
+
+
+  makeDataReady = (sample)=>{
+    var finalData = []
+    var dataRowArray = sample.split("\n") // each element is seperated by a tab.
+    for(var i=0;i<dataRowArray.length;i++){
+        var tempArray = dataRowArray[i].split("\t")
+        if(tempArray != "" && tempArray.length >0){
+            finalData.push(tempArray)
+
+        }
+
+
+    }
+
+    this.kinaseData = finalData
     console.log(this.kinaseData)
+
+
+
+  }
+
+  loadSample = ()=>{
+      this.makeDataReady(this.candidateKineases)
     this.setState({sample:this.candidateKineases})
 
 
@@ -192,9 +265,8 @@ P23458
 
   }
   submitClicked = ()=>{
-    this.kinaseData = this.state.sample.split("\n")
-    this.kinaseData = this.kinaseData.filter(e => e.trim().length !== 0);
-
+    console.log(this.state.sample)
+    this.makeDataReady(this.state.sample)
     if(!this.socket.connected){
         cogoToast.warn(
             <span className="warning-text">You are not connected.Refresh the page.</span>
@@ -238,8 +310,8 @@ P23458
         reader.addEventListener('load', e=> {
             this.setState({importedFileName:txtFile.name,sample:e.target.result})
             console.log(this.state.sample)
-            this.kinaseData = this.state.sample.split("\n")
-            this.kinaseData = this.kinaseData.filter(e => e.trim().length !== 0);
+            this.makeDataReady(this.state.sample)
+      
             console.log(this.kinaseData)
         });
         
@@ -259,7 +331,7 @@ P23458
         return(
             <Rodal showCloseButton={false} visible={this.state.showWorkingModal} >
             <div className="deepkinzero-working-container">
-                <span>DeepKinZero is working and it should not take more than a few minutes.</span>
+                <span>DeepKinZero is working and it should not take more than  few minutes.</span>
                 <br/>
                 <div style={{display:"flex",alignItems:"center"}}>
                 <span >Status:</span>
@@ -314,11 +386,14 @@ P23458
     <div className = "submit-upper-container">
 <div className="submit-textbox-container">
 <div className="submit-textbox-header">
-<span >ENTER KINEASES HERE</span>
+<span >ENTER YOUR DATA HERE</span>
 <span  onClick={()=>this.loadSample()} className="load-sample-text">LOAD SAMPLE</span>
 
 </div>
-<textarea  onChange={(e)=>this.textBoxValueChanged(e)} value={this.state.sample}  placeholder="Give information about how to enter kineases to send server here." className="submit-textbox">
+<textarea onChange={(e)=>this.textBoxValueChanged(e)} value={this.state.sample}  placeholder="There should be tab delimeted 3 columns:
+UNIPROT ID (eg. P07333), phosphosite residue and position (eg. Y561) and 15 neighboring residue of the phosphosite (eg. ESYEGNSYTFIDPTQ here the center Y is the phosphosite)
+P07333  Y561    ESYEGNSYTFIDPTQ 
+For full example click on Load Sample Data" className="submit-textbox">
 
 
 </textarea>
@@ -328,7 +403,7 @@ P23458
 </div>
 <div className="submit-right-section-container">
 <span >
-IMPORT KINEASE FILE
+IMPORT KINASE FILE
 
 </span>
 <span>{this.state.importedFileName}</span>
